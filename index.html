@@ -247,8 +247,8 @@
 
     <form id="registerForm" novalidate>
       <div class="form-group">
-        <label for="name">الاسم الكامل</label>
-        <input type="text" id="name" name="name" placeholder="أدخل الاسم" required>
+        <label for="name">الاسم </label>
+        <input type="text" id="name" name="name" placeholder="أدخل اسمك الكريم" required>
         <div class="error-msg" id="error-name">يرجى إدخال الاسم</div>
       </div>
 
@@ -272,12 +272,13 @@
 
       <!-- إضافة حقل رقم هاتف المُرشِّح -->
       <div class="form-group">
-        <label for="referrer_phone">كود الاحالة</label>
+        <label for="referrer_phone"> (إختيارى) كود الاحالة</label>
         <div class="referrer-note">لتحصلوا على نقاط ترشيح إضافية 🎉</div>
         <div class="phone-container">
           <input type="tel" id="referrer_phone" name="referrer_phone" placeholder="أدخل رقم هاتف من رشّحك للكافيه">
         </div>
         <div class="error-msg" id="error-referrer_phone">يرجى إدخال رقم هاتف صحيح للمُرشِّح</div>
+        <div class="error-msg" id="error-same-phone">لا يمكن استخدام نفس رقم هاتفك كرقم للاحالة</div>
       </div>
 
       <div class="checkbox-group">
@@ -388,6 +389,9 @@
         document.getElementById('error-phone').style.display = 'block';
       }
 
+      // الحصول على الرقم بالتنسيق الدولي
+      const fullPhone = iti.getNumber();
+
       // التحقق من رقم هاتف المُرشِّح إذا تم إدخاله
       let referrerPhone = '';
       if (referrerPhoneInput.value.trim() !== '') {
@@ -396,13 +400,16 @@
           document.getElementById('error-referrer_phone').style.display = 'block';
         } else {
           referrerPhone = itiReferrer.getNumber();
+          
+          // التحقق من أن رقم المُرشِّح مختلف عن رقم المستخدم
+          if (referrerPhone === fullPhone) {
+            valid = false;
+            document.getElementById('error-same-phone').style.display = 'block';
+          }
         }
       }
 
       if (!valid) return;
-
-      // الحصول على الرقم بالتنسيق الدولي
-      const fullPhone = iti.getNumber();
 
       // بيانات للتجربة
       const data = {
@@ -413,7 +420,7 @@
         accept_terms: terms,
         accept_offers: document.getElementById('offers').checked
       };
-
+      
       console.log("Sending data:", data);
       
       // إرسال البيانات عبر webhook
