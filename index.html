@@ -506,5 +506,58 @@ if (referrerPhoneInput.value.trim() !== '') {
       });
     });
   </script>
+
+  
+  <script>
+  async function validateToken() {
+      // 1) قراءة التوكن من URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get("token");
+  
+      if (!token) {
+          document.body.innerHTML = "<h2>❌ رابط غير صالح</h2>";
+          return;
+      }
+  
+      try {
+          // 2) طلب للتحقق من التوكن
+          const res = await fetch(`https://amr319.shop/webhook-test/validate?token=${token}`);
+          const data = await res.json();
+  
+          console.log("Validation response:", data);
+  
+          if (data.status !== "valid") {
+              // ❌ توكن غير صالح – لا تظهر الفورم
+              document.body.innerHTML = `<h2>❌ ${data.statusMessage}</h2>`;
+              return;
+          }
+  
+          // ✔ التوكن صالح – اظهر الفورم
+          document.getElementById("form-container").style.display = "block";
+  
+          // 3) عند إرسال الفورم → نعلم على التوكن Used
+          document.getElementById("fez-form").addEventListener("submit", async (e) => {
+              e.preventDefault();
+  
+              const formData = new FormData(document.getElementById("fez-form"));
+              formData.append("token", token);
+  
+              await fetch("https://YOUR_N8N_DOMAIN/webhook/mark-used", {
+                  method: "POST",
+                  body: formData
+              });
+  
+              document.body.innerHTML = "<h2>✔ شكراً، تم تسجيل بياناتك.</h2>";
+          });
+  
+      } catch (err) {
+          document.body.innerHTML = "<h2>❌ خطأ فى الاتصال بالخادم</h2>";
+      }
+  }
+  
+  // تشغيل التحقق عند تحميل الصفحة
+  window.onload = validateToken;
+</script>
+
 </body>
 </html>
