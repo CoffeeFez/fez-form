@@ -528,7 +528,7 @@ if (referrerPhoneInput.value.trim() !== '') {
   
           if (data.status !== "valid") {
               // ❌ توكن غير صالح – لا تظهر الفورم
-              document.body.innerHTML = `<h2>❌ ${data.statusMessage}</h2>`;
+              document.body.innerHTML = `<h2>❌ ${data.message}</h2>`;
               return;
           }
   
