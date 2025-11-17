@@ -321,7 +321,7 @@
       }
   
       try {
-          const res = await fetch(`https://amr319.shop/webhook-test/validate?token=${token}`);
+          const res = await fetch(`https://amr319.shop/webhook/validate?token=${token}`);
           const data = await res.json();
   
           console.log("Validation response:", data);
@@ -515,7 +515,7 @@ if (referrerPhoneInput.value.trim() !== '') {
       console.log("Sending data:", data);
       
       // إرسال البيانات عبر webhook
-      fetch('https://amr319.shop/webhook-test/form', {
+      fetch('https://amr319.shop/webhook/form', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
