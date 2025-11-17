@@ -521,7 +521,7 @@ if (referrerPhoneInput.value.trim() !== '') {
   
       try {
           // 2) طلب للتحقق من التوكن
-          const res = await fetch(`https://amr319.shop/webhook/validate?token=${token}`);
+          const res = await fetch(`https://amr319.shop/webhook-test/validate?token=${token}`);
           const data = await res.json();
   
           console.log("Validation response:", data);
